@@ -132,15 +132,12 @@ else
     check_status "更新静态文件仓库"
 fi
 
-# 第9步：修复Python问题
-#log_info "开始第9步：修复Python问题"
-#find /usr/ -name EXTERNALLY-MANAGED -exec rm -rf {} \; 2>/dev/null
-#check_status "修复Python问题"
-# 青龙必须在虚拟环境中运行
-log_info "开始第9步：青龙必须在虚拟环境中运行"
+# 第9步：青龙必须在虚拟环境中运行，创建Python虚拟环境并激活
+log_info "开始第9步：激活python虚拟环境"
 python3 -m venv /opt/venv
 echo 'source /opt/venv/bin/activate' >> /etc/profile
 source /opt/venv/bin/activate
+log_info "添加青龙面板python package目录到python虚拟环境的package中 使其可以加载页面安装的依赖"
 location=$(pip show pip | grep Location | awk '{print $2}')
 new_location=$(echo "$location" | sed 's|/opt/venv/|/ql/data/dep_cache/python3/|')
 echo "$new_location" > $location/dep_cache.pth
@@ -155,4 +152,5 @@ check_status "启动青龙"
 
 log_info "====================================="
 log_info "所有步骤执行完毕，青龙已成功安装并启动！"
+
 log_info "====================================="

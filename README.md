@@ -7,8 +7,10 @@ cd $HOME && curl -LO https://raw.githubusercontent.com/Hax4us/TermuxAlpine/maste
 第二步 进入alpine 并安装青龙面板
 ```bash
 startalpine
-
+```
+```bash
 apk update && apk add curl bash  sudo
-
+```
+```bash
 curl -LO https://raw.githubusercontent.com/gift95/termux-qinglong/refs/heads/main/installAlpineQL.sh && bash installAlpineQL.sh
 ```

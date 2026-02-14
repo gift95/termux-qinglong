@@ -144,6 +144,8 @@ echo "$new_location" > $location/dep_cache.pth
 
 # 第10步：设置青龙命令并启动
 log_info "开始第10步：设置青龙命令并启动"
+ln -s /ql/shell/task.sh /usr/bin/task 2>/dev/null
+ln -s /ql/shell/update.sh /usr/bin/ql 2>/dev/null
 ln -s /ql/docker/docker-entrypoint.sh /usr/bin/qinglong 2>/dev/null
 check_status "设置青龙命令"
 
@@ -154,3 +156,4 @@ log_info "====================================="
 log_info "所有步骤执行完毕，青龙已成功安装并启动！"
 
 log_info "====================================="
+

@@ -14,3 +14,5 @@ apk update && apk add curl bash  sudo
 ```bash
 curl -LO https://raw.githubusercontent.com/gift95/termux-qinglong/refs/heads/main/installAlpineQL.sh && bash installAlpineQL.sh
 ```
+第三步 进入青龙面板
+浏览器访问 127.0.0.1:5700/

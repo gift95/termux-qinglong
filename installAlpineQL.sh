@@ -38,8 +38,13 @@ fi
 # 第1步：设置环境变量
 log_info "开始第1步：设置环境变量"
 set -x
-echo -e "\nexport QL_DIR=/ql\nexport QL_BRANCH=master\nexport LANG=zh_CN.UTF-8\nexport TERMUX_APK_RELEASE=F-DROID\nexport VIRTUAL_ENV=/opt/venv
+if [ -f /etc/profile.d/ql_env.sh ]; then
+    echo "文件 /etc/profile.d/ql_env.sh 已存在，跳过写入"
+else
+    echo -e "\nexport QL_DIR=/ql\nexport QL_BRANCH=master\nexport LANG=zh_CN.UTF-8\nexport TERMUX_APK_RELEASE=F-DROID\nexport VIRTUAL_ENV=/opt/venv
 \nexport PATH=$VIRTUAL_ENV/bin:$PATH \nexport PNPM_HOME=/root/.local/share/pnpm\nexport PATH=$PNPM_HOME:$PATH \n export PATH=$PATH:/root/.local/share/pnpm:/root/.local/share/pnpm/global/5/node_modules \n export NODE_PATH=/usr/local/bin:/usr/local/pnpm-global/5/node_modules:/usr/local/lib/node_modules:/root/.local/share/pnpm/global/5/node_modules\nexport PYTHONUNBUFFERED=1" >>/etc/profile.d/ql_env.sh
+    echo "环境变量已写入 /etc/profile.d/ql_env.sh"
+fi
 set +x
 check_status "设置环境变量"
 
@@ -157,6 +162,7 @@ log_info "====================================="
 log_info "所有步骤执行完毕，青龙已成功安装并启动！"
 
 log_info "====================================="
+
 
 
 

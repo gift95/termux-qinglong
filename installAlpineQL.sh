@@ -65,7 +65,7 @@ check_status "执行 apk update"
 apk upgrade
 check_status "执行 apk upgrade"
 
-apk --no-cache add -f netcat-openbsd netcat-openbsd bash make nodejs npm coreutils moreutils git curl wget tzdata perl openssl nginx jq openssh python3 py3-pip
+apk --no-cache add -f netcat-openbsd netcat-openbsd bash make nodejs npm coreutils moreutils git curl wget tzdata perl openssl nginx jq openssh python3 py3-pip zsh
 check_status "安装依赖包"
 
 # 第4步：清理缓存并设置时区

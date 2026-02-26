@@ -65,7 +65,7 @@ check_status "执行 apk update"
 apk upgrade
 check_status "执行 apk upgrade"
 
-apk --no-cache add -f netcat-openbsd netcat-openbsd bash make nodejs npm coreutils moreutils git curl wget tzdata perl openssl nginx jq openssh python3 py3-pip zsh
+apk --no-cache add -f sudo netcat-openbsd netcat-openbsd bash make nodejs npm coreutils moreutils git curl wget tzdata perl openssl nginx jq openssh python3 py3-pip zsh
 check_status "安装依赖包"
 
 # 第4步：清理缓存并设置时区
@@ -159,12 +159,15 @@ ln -s /ql/shell/task.sh /usr/bin/task 2>/dev/null
 ln -s /ql/shell/update.sh /usr/bin/ql 2>/dev/null
 ln -s /ql/docker/docker-entrypoint.sh /usr/bin/qinglong 2>/dev/null
 check_status "设置青龙命令"
-
+# 自动进入zsh
+log_info "正在进入zsh..."
 source /etc/profile
-qinglong &
-check_status "启动青龙"
+source /opt/venv/bin/activate
+exec /bin/zsh
+
 
 log_info "====================================="
-log_info "所有步骤执行完毕，青龙已成功安装并启动！"
-
+log_info "所有步骤执行完毕，青龙已成功安装！"
+log_info "请使用以下命令启动青龙："
+log_info "qinglong"
 log_info "====================================="

@@ -92,7 +92,7 @@ check_status "创建青龙目录"
 # 第6步：克隆青龙仓库
 log_info "开始第6步：克隆青龙仓库"
 if [ ! -d "$QL_DIR/.git" ]; then
-    git clone -b $QL_BRANCH https://github.com/whyour/qinglong.git $QL_DIR
+    git clone -b --depth=1 $QL_BRANCH https://github.com/whyour/qinglong.git $QL_DIR
     check_status "克隆青龙仓库"
 else
     log_warn "青龙仓库已存在，跳过克隆"
@@ -157,6 +157,7 @@ log_info "====================================="
 log_info "所有步骤执行完毕，青龙已成功安装并启动！"
 
 log_info "====================================="
+
 
 
 

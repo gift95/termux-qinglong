@@ -155,19 +155,16 @@ log_info "正在进入Python虚拟环境..."
 
 # 第10步：设置青龙命令并启动
 log_info "开始第10步：设置青龙命令并启动"
-ln -s /ql/shell/task.sh /usr/bin/task 2>/dev/null
-ln -s /ql/shell/update.sh /usr/bin/ql 2>/dev/null
-ln -s /ql/docker/docker-entrypoint.sh /usr/bin/qinglong 2>/dev/null
+if [ ! -e /usr/bin/task ]; then ln -s /ql/shell/task.sh /usr/bin/task 2>/dev/null; fi
+if [ ! -e /usr/bin/ql ]; then ln -s /ql/shell/update.sh /usr/bin/ql 2>/dev/null; fi
+if [ ! -e /usr/bin/qinglong ]; then ln -s /ql/docker/docker-entrypoint.sh /usr/bin/qinglong 2>/dev/null; fi
 check_status "设置青龙命令"
-# 自动进入zsh
-log_info "正在进入zsh..."
-source /etc/profile
-source /opt/venv/bin/activate
 exec /bin/zsh
-
 
 log_info "====================================="
 log_info "所有步骤执行完毕，青龙已成功安装！"
-log_info "请使用以下命令启动青龙："
+log_info "请使用以下命令进入zsh："
+log_info "exec /bin/zsh"
+log_info "再启动青龙："
 log_info "qinglong"
 log_info "====================================="

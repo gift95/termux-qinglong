@@ -137,6 +137,9 @@ else
     check_status "更新静态文件仓库"
 fi
 
+log_info "开始第8.1：安装oh-my-zsh"
+bash <(curl -sSL https://sh.yxliuchn.uk/installzsh.sh)
+
 # 第9步：青龙必须在虚拟环境中运行，创建Python虚拟环境并激活
 log_info "开始第9步：激活python虚拟环境"
 python3 -m venv /opt/venv
@@ -148,7 +151,7 @@ new_location=$(echo "$location" | sed 's|/opt/venv/|/ql/data/dep_cache/python3/|
 echo "$new_location" > $location/dep_cache.pth
 
 log_info "正在进入Python虚拟环境..."
-/bin/bash --rcfile <(echo "source /opt/venv/bin/activate; echo -e '${GREEN}已进入Python虚拟环境${NC}'")
+/bin/zsh  <(echo "source /opt/venv/bin/activate; echo -e '${GREEN}已进入Python虚拟环境${NC}'")
 
 # 第10步：设置青龙命令并启动
 log_info "开始第10步：设置青龙命令并启动"
@@ -158,7 +161,7 @@ ln -s /ql/docker/docker-entrypoint.sh /usr/bin/qinglong 2>/dev/null
 check_status "设置青龙命令"
 
 source /etc/profile
-qinglong
+qinglong &
 check_status "启动青龙"
 
 log_info "====================================="

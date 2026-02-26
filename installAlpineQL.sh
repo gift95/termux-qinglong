@@ -147,6 +147,9 @@ location=$(pip show pip | grep Location | awk '{print $2}')
 new_location=$(echo "$location" | sed 's|/opt/venv/|/ql/data/dep_cache/python3/|')
 echo "$new_location" > $location/dep_cache.pth
 
+log_info "正在进入Python虚拟环境..."
+/bin/bash --rcfile <(echo "source /opt/venv/bin/activate; echo -e '${GREEN}已进入Python虚拟环境${NC}'")
+
 # 第10步：设置青龙命令并启动
 log_info "开始第10步：设置青龙命令并启动"
 ln -s /ql/shell/task.sh /usr/bin/task 2>/dev/null

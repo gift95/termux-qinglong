@@ -123,7 +123,7 @@ check_status "创建静态文件目录"
 # 第8步：克隆静态文件仓库
 log_info "开始第8步：克隆静态文件仓库"
 if [ ! -d "$QL_DIR/static/.git" ]; then
-    git clone -b $QL_BRANCH https://github.com/whyour/qinglong-static.git $QL_DIR/static
+    git clone -b  --depth=1 $QL_BRANCH https://github.com/whyour/qinglong-static.git $QL_DIR/static
     check_status "克隆静态文件仓库"
 else
     log_warn "静态文件仓库已存在，跳过克隆"
@@ -157,5 +157,6 @@ log_info "====================================="
 log_info "所有步骤执行完毕，青龙已成功安装并启动！"
 
 log_info "====================================="
+
 
 

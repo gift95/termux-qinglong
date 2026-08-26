@@ -4,9 +4,8 @@
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
-NC='\033[0m' # 无颜色
+NC='\033[0m'
 
-# 定义日志函数
 log_info() {
     echo -e "${GREEN}[INFO]${NC} $1"
 }
@@ -19,7 +18,6 @@ log_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
-# 定义检查命令执行状态的函数
 check_status() {
     if [ $? -ne 0 ]; then
         log_error "$1 失败"
@@ -28,6 +26,28 @@ check_status() {
         log_info "$1 成功"
     fi
 }
+
+# ============ 询问是否安装 oh-my-zsh ============
+INSTALL_OHMYZSH=""
+while true; do
+    read -p "是否安装 oh-my-zsh？(y/n，默认 n): " install_choice
+    case $install_choice in
+        [Yy]* )
+            INSTALL_OHMYZSH="yes"
+            log_info "将安装 oh-my-zsh"
+            break
+            ;;
+        [Nn]* | "" )
+            INSTALL_OHMYZSH="no"
+            log_info "将跳过 oh-my-zsh 安装"
+            break
+            ;;
+        * )
+            echo "请输入 y 或 n"
+            ;;
+    esac
+done
+# =================================================
 
 # 确保脚本以root用户运行
 if [ "$(id -u)" -ne 0 ]; then
@@ -65,8 +85,16 @@ check_status "执行 apk update"
 apk upgrade
 check_status "执行 apk upgrade"
 
-apk --no-cache add -f sudo netcat-openbsd netcat-openbsd bash make nodejs npm coreutils moreutils git curl wget tzdata perl openssl nginx jq openssh python3 py3-pip
-check_status "安装依赖包"
+# 基础依赖包（不包含 zsh）
+apk --no-cache add -f sudo netcat-openbsd bash make nodejs npm coreutils moreutils git curl wget tzdata perl openssl nginx jq openssh python3 py3-pip
+check_status "安装基础依赖包"
+
+# 根据选择决定是否安装 zsh
+if [ "$INSTALL_OHMYZSH" = "yes" ]; then
+    apk --no-cache add -f zsh
+    check_status "安装 zsh"
+fi
+# =================================================
 
 # 第4步：清理缓存并设置时区
 log_info "开始第4步：清理缓存并设置时区"
@@ -106,9 +134,6 @@ else
     check_status "更新青龙仓库"
 fi
 
-
-
-
 # 第7步：初始化青龙
 log_info "开始第7步：初始化青龙"
 cd $QL_DIR
@@ -137,25 +162,27 @@ else
     check_status "更新静态文件仓库"
 fi
 
-log_info "开始第8.1：安装oh-my-zsh"
-bash <(curl -sSL https://sh.yxliuchn.uk/installzsh.sh)
+# ============ 条件安装 oh-my-zsh ============
+if [ "$INSTALL_OHMYZSH" = "yes" ]; then
+    log_info "开始安装 oh-my-zsh"
+    bash <(curl -sSL https://sh.yxliuchn.uk/installzsh.sh)
+    check_status "安装 oh-my-zsh"
+else
+    log_info "根据用户选择，跳过 oh-my-zsh 安装"
+fi
+# =============================================
 
-# 第9步：青龙必须在虚拟环境中运行，创建Python虚拟环境并激活
-log_info "开始第9步：激活python虚拟环境"
+# 第9步：创建Python虚拟环境并激活
+log_info "开始第9步：创建Python虚拟环境"
 python3 -m venv /opt/venv
 echo 'source /opt/venv/bin/activate' >> /etc/profile
+
+# 直接激活，不使用子 shell
 source /opt/venv/bin/activate
+log_info "已进入Python虚拟环境"
 
-#log_info "添加青龙面板python package目录到python虚拟环境的package中 使其可以加载页面安装的依赖"
-#location=$(pip show pip | grep Location | awk '{print $2}')
-#new_location=$(echo "$location" | sed 's|/opt/venv/|/ql/data/dep_cache/python3/|')
-#echo "$new_location" > $location/dep_cache.pth
-
-log_info "正在进入Python虚拟环境..."
-/bin/zsh  <(echo "source /opt/venv/bin/activate; echo -e '${GREEN}已进入Python虚拟环境${NC}'")
-
-# 第10步：设置青龙命令并启动
-log_info "开始第10步：设置青龙命令并启动"
+# 第10步：设置青龙命令
+log_info "开始第10步：设置青龙命令"
 if [ ! -e /usr/bin/task ]; then ln -s /ql/shell/task.sh /usr/bin/task 2>/dev/null; fi
 if [ ! -e /usr/bin/ql ]; then ln -s /ql/shell/update.sh /usr/bin/ql 2>/dev/null; fi
 if [ ! -e /usr/bin/qinglong ]; then ln -s /ql/docker/docker-entrypoint.sh /usr/bin/qinglong 2>/dev/null; fi
@@ -163,11 +190,14 @@ check_status "设置青龙命令"
 
 log_info "====================================="
 log_info "所有步骤执行完毕，青龙已成功安装！"
-log_info "已进入zsh："
-log_info "启动青龙："
-log_info "qinglong"
-log_info "====================================="
 
-exec /bin/zsh
-
-
+# ============ 根据选择进入不同 shell ============
+if [ "$INSTALL_OHMYZSH" = "yes" ]; then
+    log_info "启动青龙：qinglong"
+    log_info "====================================="
+    exec /bin/zsh
+else
+    log_info "启动青龙：qinglong"
+    log_info "====================================="
+fi
+# =============================================

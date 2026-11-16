@@ -86,7 +86,7 @@ apk upgrade
 check_status "执行 apk upgrade"
 
 # 基础依赖包（不包含 zsh）
-apk --no-cache add -f sudo netcat-openbsd bash make nodejs npm coreutils moreutils git curl wget tzdata perl openssl nginx jq openssh python3 py3-pip
+apk --no-cache add -f sudo netcat-openbsd bash make nodejs npm coreutils moreutils git curl wget tzdata perl openssl nginx jq openssh python3 py3-pip sqlite sqlite-dev
 check_status "安装基础依赖包"
 
 # 根据选择决定是否安装 zsh
